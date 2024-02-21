@@ -1,29 +1,10 @@
 import streamlit as st
 from streamlit_extras.switch_page_button import switch_page
+from templates.sections import analyze_set, injury
 
 ## maybe make this page more like gym where you add a set and then when you submit the set it prints to the screen so there's less
 ## of a chance for it to get deleted or something and this would hopefully just look cleaner
 ## additionally this would be able to catch errors in formatting more quickly as they happen 
-
-def analyze_set(st_text_input):
-    if len(st_text_input) == 0:
-        return "none", "none"
-    try:
-        parts = []
-        total_yards = 0
-        string_splice = st_text_input
-        while not string_splice.find(";") == -1:
-            current = string_splice[:string_splice.find(';')].strip()
-            parts.append(current)
-            num = int(current[:current.find('x')].strip())
-            yards = int(current[current.find('x')+2:current.find(' ', current.find('x')+2)].strip())
-            total_yards = total_yards + num * yards
-            string_splice = string_splice[string_splice.find(';')+1:].strip()
-        final_modifier = int(string_splice[2:])
-        total_yards = total_yards * final_modifier
-        return parts, total_yards
-    except:
-        st.error("An error occurred!! The above set may not be formatted properly")
 
 st.set_page_config(
     page_title="Swim"
@@ -50,23 +31,8 @@ sets = [st.text_input(f'Set {i+1}', key=f"text_input_{i}")
 warmdown = st.text_input("Warm Down")
 warmdown_components, warmdown_yards = analyze_set(warmdown)
 
-injury = st.radio("Did you feel pain?", ["No", "Yes"])
-if injury == "Yes":
-    where = st.multiselect("Where?", [
-        "Head/Neck",
-        "Upper Back",
-        "Lower Back",
-        "Shoulders",
-        "Arms",
-        "Elbows",
-        "Chest/Stomach",
-        "Waist",
-        "Legs",
-        "Knees",
-        "Ankles",
-        "Feet"
-    ])
-    scale = st.slider("On a Scale From 1 to 10", min_value=1.0, max_value=10.0, step=0.5)
+status = st.radio("Did you feel pain?", ["No", "Yes"])
+where, scale = injury(status=status)
 
 submit = st.button("Submit")
 if submit:
