@@ -1,11 +1,20 @@
 import streamlit as st
 from streamlit_extras.switch_page_button import switch_page
+from templates.sections import injury
 
 st.set_page_config(
     page_title="Gym"
 )
 
 st.title("Gym Workout")
+
+if "previous" not in st.session_state:
+    st.session_state.previous = []
+
+for item in st.session_state.previous:
+    st.text(item["name"])
+    for i in range(item['num_sets']):
+        st.text(f'- {item[f"{i+1}"]["reps"]} x {item[f"{i+1}"]["weight"]}')
 
 add_exercise = st.button("Add Exercise")
 
@@ -33,11 +42,27 @@ if st.session_state.add:
             for i in range(num_sets)]
     finish_add = st.button("Finish Exercise")
     if finish_add:
-        ## save the exercise name, reps, and weights and then display on the page until the final workout is saved when this will be 
-        ## placed into the database (again cannot do on this computer)
+        exercise = {
+            "name": name,
+            "num_sets": num_sets,
+        }
+        for i in range(num_sets):
+            exercise[f'{i+1}'] = {
+                "reps": rep_values[i],
+                "weight": weight_values[i]
+            }
+
+        st.session_state.previous.append(exercise)
+
         st.session_state.add = not st.session_state.add
+        st.rerun()
+else:
+    status = st.radio("Any Pain?", ["No", "Yes"])
+    where, scale = injury(status=status)
 
 submit = st.button("Submit")
 if submit:
     ## code that will save data to my database and possibly show a message 
+    st.session_state.add = False
+    st.session_state.previous = []
     switch_page("workout")
