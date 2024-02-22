@@ -1,0 +1,19 @@
+services:
+  db:
+    image: mysql:8.0
+    restart: unless-stopped
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: Mack0319
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d/:ro
+  app: 
+    build: ./app
+    ports:
+      - "8501:8501"
+    restart: on-failure:10
+    links:
+      - db
+    depends_on:
+      - db

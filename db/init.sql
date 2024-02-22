@@ -1,22 +1,26 @@
-create database workoutTypes;
-use workoutTypes;
+create database workouts;
+use workouts;
 
-create table gym (
-    id INT unsigned NOT NULL AUTO_INCREMENT,
-    name varchar(30),
-    body varchar(20),
-    type varchar(15)
-    primary key (id)
-)
+create table gym_exercises (
+  id int auto_increment primary key,
+  exercise_date varchar(50),
+  exercise_name varchar(100),
+  num_sets int
+);
 
-create database workoutHistory;
-use workoutHistory;
+create table gym_sets (
+  id int auto_increment primary key,
+  exercise_id int,
+  set_num int,
+  weight decimal,
+  reps int,
+  foreign key (exercise_id) references gym_exercises(id)
+);
 
-create table volleyball_games (
-    id INT unsigned NOT NULL AUTO_INCREMENT,
-    partners TEXT,
-    hours ,
-    matches varchar(3),
-    injury TEXT,
-    primary key (id)
-)
+create table injuries (
+  id int auto_increment primary key,
+  exercise_type varchar(100),
+  pain_index int,
+  location varchar(100),
+  injury_date varchar(50)
+);
