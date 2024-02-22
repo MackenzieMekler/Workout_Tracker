@@ -1,9 +1,0 @@
-{
-    "arms": ["Bicep Curl", "Concentration Bicep Curl", "Tricep Pull Downs", "Dips", "Pullups"],
-    "back": [],
-    "exercises" : {
-        "Bicep Curl": {
-            "body": "arms"
-        }
-    }
-}
