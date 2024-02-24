@@ -1,5 +1,7 @@
 import streamlit as st
 from streamlit_extras.switch_page_button import switch_page
+from datetime import datetime
+
 from templates.sections import injury
 from scripts.database import database
 
@@ -36,10 +38,10 @@ if st.session_state.add:
     num_sets = st.number_input("Number of Sets", step=1, min_value=0)
     col1, col2 = st.columns(2)
     with col1:
-        rep_values = [st.number_input(f'Reps', key=f"text_input_{i}", step=1)
+        rep_values = [st.number_input(f'Reps', key=f"rep_input_{i}", step=1)
             for i in range(num_sets)]
     with col2:
-        weight_values = [st.number_input(f'Weight', key=f"text_input_{i+10}", step=1)
+        weight_values = [st.number_input(f'Weight', key=f"weight_input_{i}", step=1)
             for i in range(num_sets)]
     finish_add = st.button("Finish Exercise")
     if finish_add:
@@ -55,6 +57,15 @@ if st.session_state.add:
 
         st.session_state.previous.append(exercise)
 
+        cnx = database()
+        reps = []
+        weight = []
+        for i in range(num_sets):
+            reps.append(exercise[f'{i+1}']['reps'])
+            weight.append(exercise[f'{i+1}']["weight"])
+
+        cnx.add_exercise(datetime.today().strftime("%Y-%m-%d"), exercise["name"], exercise["num_sets"], reps, weight)
+
         st.session_state.add = not st.session_state.add
         st.rerun()
 else:
@@ -63,9 +74,6 @@ else:
 
 submit = st.button("Submit")
 if submit:
-    cnx = database()
-    exercise = st.session_state.previous[0]
-    cnx.add_exercise("2024-02-22", exercise["name"], exercise["num_sets"], [exercise["1"]["reps"]], [exercise["1"]["weight"]])
     st.session_state.add = False
     st.session_state.previous = []
     switch_page("workout")
