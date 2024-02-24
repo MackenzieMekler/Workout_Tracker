@@ -22,17 +22,17 @@ add_exercise = st.button("Add Exercise")
 if "add" not in st.session_state:
     st.session_state.add = False
 
-if add_exercise: 
+if add_exercise:
     st.session_state.add = not st.session_state.add
 
 # currently I am having issues with this feature because everytime you hit a button within the nested if statements, the code 
 # reruns and returns the previous statement to false. There's a way to do caching that I might have to explore. 
-if st.session_state.add: 
+if st.session_state.add:
     name = st.text_input("Exercise Name:")
-    ## I want to add code that will search the exercise name and display past workout values for that exercise but 
-    ## I need to do this in the other envionrment so I can interact with the database 
+    ## I want to add code that will search the exercise name and display past workout values for that exercise but
+    ## I need to do this in the other envionrment so I can interact with the database
     ## will probably need to search text input against database
-    
+
     num_sets = st.number_input("Number of Sets", step=1, min_value=0)
     col1, col2 = st.columns(2)
     with col1:
@@ -64,7 +64,8 @@ else:
 submit = st.button("Submit")
 if submit:
     cnx = database()
-    cnx.add_exercise("2024-02-22", exercise["name"], exercise["num_sets"], exercise["1"]["reps"], exercise["1"]["weight"])
+    exercise = st.session_state.previous[0]
+    cnx.add_exercise("2024-02-22", exercise["name"], exercise["num_sets"], [exercise["1"]["reps"]], [exercise["1"]["weight"]])
     st.session_state.add = False
     st.session_state.previous = []
     switch_page("workout")

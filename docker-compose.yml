@@ -8,6 +8,7 @@ services:
       MYSQL_ROOT_PASSWORD: Mack0319
     volumes:
       - ./db:/docker-entrypoint-initdb.d/:ro
+    container_name: wtdb
   app: 
     build: ./app
     ports:
@@ -17,3 +18,4 @@ services:
       - db
     depends_on:
       - db
+    container_name: wtapp
