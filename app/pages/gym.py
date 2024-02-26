@@ -34,6 +34,13 @@ if st.session_state.add:
     ## I want to add code that will search the exercise name and display past workout values for that exercise but
     ## I need to do this in the other envionrment so I can interact with the database
     ## will probably need to search text input against database
+    cnx = database()
+
+    if len(name) > 0:
+        df, df2 = cnx.search_exercise(name)
+        st.write(df)
+        st.write(df2)
+
 
     num_sets = st.number_input("Number of Sets", step=1, min_value=0)
     col1, col2 = st.columns(2)
@@ -57,7 +64,6 @@ if st.session_state.add:
 
         st.session_state.previous.append(exercise)
 
-        cnx = database()
         reps = []
         weight = []
         for i in range(num_sets):
