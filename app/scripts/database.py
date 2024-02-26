@@ -1,5 +1,6 @@
 import json
 import mysql.connector
+import pandas as pd
 
 class database:
     def __init__(self):
@@ -29,3 +30,31 @@ class database:
         for i in range(num_sets):
             self.cursor.execute(query, (i+1, weights[i], reps[i]))
         self.cnx.commit()
+
+    def search_exercise(self, name):
+        query = f"""
+        SELECT * FROM gym_exercises WHERE exercise_name = '{name}'
+        """
+
+        self.cursor.execute(query)
+        result_set = self.cursor.fetchall()
+        df = pd.DataFrame(result_set, columns=[desc[0] for desc in self.cursor.description])
+
+        sets = df['id'].unique()
+        df2s = []
+        # for row in df, save unique exercise_id values
+        for item in sets:
+            df2s.append(self.get_exercise_sets(item))
+
+        return df, df2s
+
+    def get_exercise_sets(self, id):
+        query = f"""
+        SELECT * FROM gym_sets WHERE exercise_id = {id}
+        """
+
+        self.cursor.execute(query)
+        result_set = self.cursor.fetchall()
+        df = pd.DataFrame(result_set, columns=[desc[0] for desc in self.cursor.description])
+
+        return df
