@@ -15,8 +15,6 @@ COPY home.py /app
 COPY templates /app/templates
 COPY scripts /app/scripts
 COPY config /app/config
-COPY Pipfile /app
-COPY Pipfile.lock /app
 
 # execute streamlit command
 CMD streamlit run workout.py
