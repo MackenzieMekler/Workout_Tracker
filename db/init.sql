@@ -24,3 +24,16 @@ create table injuries (
   location varchar(100),
   injury_date varchar(50)
 );
+
+create table swim (
+  id int auto_increment primary key,
+  swim_date varchar(50),
+  swim_time int,
+  total_yards int,
+  distance int,
+  mid int,
+  sprint int,
+  stroke int,
+  technique int,
+  other int
+);

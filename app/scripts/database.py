@@ -58,3 +58,12 @@ class database:
         df = pd.DataFrame(result_set, columns=[desc[0] for desc in self.cursor.description])
 
         return df
+
+    def add_swim(self, date, time, total_yards, distance, mid, sprint, stroke, technique, other):
+        query = """
+        INSERT INTO swim (swim_date, swim_time, total_yards, distance, mid, sprint, stroke, technique, other)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """
+
+        self.cursor.execute(query, (date, time, total_yards, distance, mid, sprint, stroke, technique, other))
+        self.cnx.commit()
