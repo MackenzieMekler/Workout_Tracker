@@ -1,6 +1,8 @@
 import streamlit as st
 from streamlit_extras.switch_page_button import switch_page
 from datetime import datetime
+# import plotly.express as px
+import pandas as pd
 
 from templates.sections import injury
 from scripts.database import database
@@ -31,16 +33,25 @@ if add_exercise:
 # reruns and returns the previous statement to false. There's a way to do caching that I might have to explore. 
 if st.session_state.add:
     name = st.text_input("Exercise Name:")
-    ## I want to add code that will search the exercise name and display past workout values for that exercise but
-    ## I need to do this in the other envionrment so I can interact with the database
-    ## will probably need to search text input against database
     cnx = database()
 
     if len(name) > 0:
-        df, df2 = cnx.search_exercise(name)
-        st.write(df)
-        st.write(df2)
-
+        try:
+            df, df2 = cnx.search_exercise(name)
+            set_df = pd.concat(df2)
+            final_df = pd.DataFrame()
+            names = []
+            dates = []
+            for row in set_df["exercise_id"]:
+                names.append(df.loc[df['id'] == row, 'exercise_name'].iloc[0])
+                dates.append(df.loc[df['id'] == row, 'exercise_date'].iloc[0])
+            final_df['name'] = names
+            final_df['weight'] = set_df['weight']
+            final_df['reps'] = set_df['reps']
+            final_df['date'] = dates
+            st.dataframe(final_df)
+        except:
+            st.warning("Exercise is not found in records")
 
     num_sets = st.number_input("Number of Sets", step=1, min_value=0)
     col1, col2 = st.columns(2)
