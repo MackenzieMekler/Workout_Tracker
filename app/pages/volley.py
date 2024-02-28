@@ -1,5 +1,7 @@
 import streamlit as st
 from streamlit_extras.switch_page_button import switch_page
+from scripts.database import database
+from datetime import datetime
 
 st.set_page_config(
     page_title="Volleyball"
@@ -7,22 +9,24 @@ st.set_page_config(
 
 st.title("Volleyball Workout")
 
-st.slider("Hours Played", min_value=0.5, max_value=6.5, step=0.5)
+time = st.slider("Minutes Played", min_value=0, max_value=400, step=15)
 playtype = st.selectbox("Type of Play", ["Enter Here", "Games", "Practice"])
 
-if playtype == "Games": 
-    st.text_input("Partners:")
-    st.slider(
+if playtype == "Games":
+    matches = st.slider(
         "Number of Matches",
-        1,
+        0,
         10
     )
-if playtype == "Practice":
-    st.multiselect("Focuses", ["Hitting", "Setting", "Defense", "Optioning", "Serving"])
+else:
+    matches = 0
+# if playtype == "Practice":
+#     st.multiselect("Focuses", ["Hitting", "Setting", "Defense", "Optioning", "Serving"])
 
 submit = st.button("Submit")
 if submit:
-    ## code that will save data to my database and possibly show a message 
+    cnx = database()
+    cnx.add_volley(datetime.today().strftime("%Y-%m-%d"), time, int(playtype == "Games"), int(playtype == "Practice"), matches)
+
     switch_page("workout")
-# upon submit, save the current settings into a sql dataframe or a json object
-# also reset page and return to homepage
+

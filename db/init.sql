@@ -37,3 +37,20 @@ create table swim (
   technique int,
   other int
 );
+
+create table bjj (
+  id int auto_increment primary key,
+  bjj_date int,
+  bjj_time int,
+  practice int,
+  rolling int
+);
+
+create table volley(
+  id int auto_increment primary key,
+  volley_date varchar(50),
+  volley_time int,
+  games int,
+  practice int,
+  matches int
+);

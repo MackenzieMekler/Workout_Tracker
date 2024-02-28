@@ -67,3 +67,21 @@ class database:
 
         self.cursor.execute(query, (date, time, total_yards, distance, mid, sprint, stroke, technique, other))
         self.cnx.commit()
+
+    def add_bjj(self, date, time, practice, rolling):
+        query = """
+        INSERT INTO bjj (bjj_date, bjj_time, practice, rolling)
+        VALUES (%s, %s, %s, %s)
+        """
+
+        self.cursor.execute(query, (date, time, practice, rolling))
+        self.cnx.commit()
+
+    def add_volley(self, date, time, games, practice, matches):
+        query = """
+        INSERT INTO volley(volley_date, volley_time, games, practice, matches)
+        VALUES (%s, %s, %s, %s, %s)
+        """
+
+        self.cursor.execute(query, (date, time, games, practice, matches))
+        self.cnx.commit()
