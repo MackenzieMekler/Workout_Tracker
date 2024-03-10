@@ -15,6 +15,7 @@ COPY home.py /app
 COPY templates /app/templates
 COPY scripts /app/scripts
 COPY config /app/config
+COPY json /app/json
 
 # execute streamlit command
 CMD streamlit run workout.py

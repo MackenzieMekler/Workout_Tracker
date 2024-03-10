@@ -24,12 +24,20 @@ class database:
         VALUES (%s, %s, %s)
         """
         self.cursor.execute(query, (date, name, num_sets))
+        # query = "LAST_INSERT_ID()"
         query = "SET @exercise_id = LAST_INSERT_ID()"
         self.cursor.execute(query)
         query = "INSERT INTO gym_sets (exercise_id, set_num, weight, reps) VALUES (@exercise_id, %s, %s, %s)"
         for i in range(num_sets):
             self.cursor.execute(query, (i+1, weights[i], reps[i]))
         self.cnx.commit()
+
+    def add_gym_sets(self, id, set_num, weight, reps):
+        query = """
+        INSERT INTO gym_sets (exercise_id, set_num, weight, reps)
+        VALUES (%s, %s, %s, %s)
+        """
+        self.cursor.execute(query, (id, set_num, weight, reps))
 
     def search_exercise(self, name):
         query = f"""

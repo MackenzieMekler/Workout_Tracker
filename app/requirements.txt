@@ -1,5 +1,6 @@
 streamlit
 streamlit-extras
+extra-streamlit-components
 mysql-connector-python
 pandas
 plotly
